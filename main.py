@@ -1,5 +1,5 @@
-
-
+import base64
+import requests
 from langchain.chat_models import ChatOpenAI
 from openai import OpenAI
 from langchain_community.document_loaders import UnstructuredPowerPointLoader
@@ -99,7 +99,48 @@ def image_url_interpreter():
 
   return response 
 
-# def image_
+# === Image from current path
+def image_path_interpretation():
+  OPENAI_API_KEY='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'
 
-# res = ()
-# print(res)
+  def encode_image(image_path):
+    with open(image_path, "rb") as image_file:
+      return base64.b64encode(image_file.read()).decode('utf-8')
+    
+  image_path = "videogames.jpg"
+
+  base64_image = encode_image(image_path)
+
+  headers = {
+    "Content-Type": "application/json",
+    "Authorization": f"Bearer {OPENAI_API_KEY}"
+  }
+
+  payload = {
+    "model": "gpt-4-vision-preview",
+    "messages": [
+      {
+        "role": "user",
+        "content": [
+          {
+            "type": "text",
+            "text": "What’s in this image? Create a short response where possible"
+          },
+          {
+            "type": "image_url",
+            "image_url": {
+              "url": f"data:image/jpeg;base64,{base64_image}"
+            }
+          }
+        ]
+      }
+    ],
+    "max_tokens": 300
+  }
+
+  response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=payload)
+
+  return response.json()
+
+res = image_path_interpretation()
+print(res)
