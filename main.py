@@ -101,8 +101,6 @@ def image_url_interpreter():
 
 # === Image from current path
 def image_path_interpretation():
-  OPENAI_API_KEY='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'
-
   def encode_image(image_path):
     with open(image_path, "rb") as image_file:
       return base64.b64encode(image_file.read()).decode('utf-8')
@@ -142,5 +140,18 @@ def image_path_interpretation():
 
   return response.json()
 
-res = image_path_interpretation()
+def image_generation_dalle():
+  client = OpenAI()
+
+  response = client.images.generate(
+    model="dall-e-3",
+    prompt="a white siamese cat",
+    size="1024x1024",
+    quality="standard",
+    n=1,
+  )
+
+  return response.data[0].url
+
+res = image_generation_dalle()
 print(res)
