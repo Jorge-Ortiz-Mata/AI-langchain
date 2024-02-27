@@ -145,7 +145,7 @@ def image_generation_dalle():
 
   response = client.images.generate(
     model="dall-e-3",
-    prompt="a white siamese cat",
+    prompt="an image of new york city that captures the feeling of nostalgia for the 1980s, featuring iconic objects from that era.",
     size="1024x1024",
     quality="standard",
     n=1,
